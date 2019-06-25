@@ -1,0 +1,18 @@
+uuid: d54e867c-6ebc-4ab9-b618-7e6adcc9424d
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.university_programs
+id: taxonomy_term.university_programs.name
+field_name: name
+entity_type: taxonomy_term
+bundle: university_programs
+label: Name
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,38 @@
+uuid: 96657e5c-e922-4eb3-a09c-2dfa03a51045
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_calendar_image
+    - node.type.events
+  module:
+    - image
+id: node.events.field_calendar_image
+field_name: field_calendar_image
+entity_type: node
+bundle: events
+label: 'calendar image'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'png gif jpg jpeg'
+  max_filesize: ''
+  max_resolution: ''
+  min_resolution: ''
+  alt_field: true
+  alt_field_required: true
+  title_field: false
+  title_field_required: false
+  default_image:
+    uuid: a041cfd7-d03f-4dd4-9e0e-cf3094443b8d
+    alt: calendar
+    title: ''
+    width: 82
+    height: 77
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: image

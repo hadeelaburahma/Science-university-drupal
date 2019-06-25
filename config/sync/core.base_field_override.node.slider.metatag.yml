@@ -1,0 +1,18 @@
+uuid: 85d3a75e-4c5b-49eb-96ec-3ea4cf1465c8
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.slider
+id: node.slider.metatag
+field_name: metatag
+entity_type: node
+bundle: slider
+label: Metatags
+description: 'The meta tags for the entity.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: map

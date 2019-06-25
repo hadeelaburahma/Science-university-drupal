@@ -1,0 +1,21 @@
+uuid: 599c3ba9-627f-4639-a02d-00ae1d55ca83
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_event_date
+    - node.type.events
+  module:
+    - datetime_range
+id: node.events.field_event_date
+field_name: field_event_date
+entity_type: node
+bundle: events
+label: 'event date'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: daterange

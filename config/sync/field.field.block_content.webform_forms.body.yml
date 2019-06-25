@@ -1,0 +1,22 @@
+uuid: 3faf2734-bdc0-4ac4-b521-f89ba5018490
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.webform_forms
+    - field.storage.block_content.body
+  module:
+    - text
+id: block_content.webform_forms.body
+field_name: body
+entity_type: block_content
+bundle: webform_forms
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+field_type: text_with_summary

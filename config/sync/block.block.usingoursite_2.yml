@@ -1,0 +1,24 @@
+uuid: 79175a42-90af-4c05-aebb-362b3b9b86ca
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.using-our-site
+  module:
+    - system
+  theme:
+    - su
+id: usingoursite_2
+theme: su
+region: footer_second
+weight: 0
+provider: null
+plugin: 'system_menu_block:using-our-site'
+settings:
+  id: 'system_menu_block:using-our-site'
+  label: 'Using our site'
+  provider: system
+  label_display: visible
+  level: 1
+  depth: 0
+visibility: {  }

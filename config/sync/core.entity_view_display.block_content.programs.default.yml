@@ -1,0 +1,35 @@
+uuid: 40c36a88-0cfc-46e3-b06d-1c517192d8f1
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.programs
+    - field.field.block_content.programs.body
+    - field.field.block_content.programs.field_program_image
+    - image.style.prpgrams_image_263x263
+  module:
+    - image
+    - text
+id: block_content.programs.default
+targetEntityType: block_content
+bundle: programs
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 1
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_program_image:
+    weight: 0
+    label: hidden
+    settings:
+      image_style: prpgrams_image_263x263
+      image_link: content
+    third_party_settings: {  }
+    type: image
+    region: content
+hidden:
+  langcode: true

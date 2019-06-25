@@ -1,0 +1,110 @@
+uuid: d6c069ad-8696-45de-ba65-60fe2034da67
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.full
+    - field.field.node.events.body
+    - field.field.node.events.field_calendar_image
+    - field.field.node.events.field_event_date
+    - field.field.node.events.field_event_image
+    - field.field.node.events.field_location
+    - field.field.node.events.field_meta_tags
+    - field.field.node.events.field_taxonomy
+    - field.field.node.events.field_yoast_seo
+    - node.type.events
+  module:
+    - datetime_range
+    - ds
+    - image
+    - metatag
+    - options
+    - text
+    - user
+third_party_settings:
+  ds:
+    layout:
+      id: bs_1col
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        layout:
+          wrapper: div
+          classes:
+            row: row
+          add_layout_class: 1
+          attributes: ''
+        regions:
+          main:
+            wrapper: div
+            classes:
+              col-sm-12: col-sm-12
+            add_region_classes: 1
+            attributes: ''
+    regions:
+      main:
+        - node_title
+        - field_event_image
+        - field_event_date
+        - field_location
+        - body
+        - field_meta_tags
+    fields:
+      node_title:
+        plugin_id: node_title
+        weight: 0
+        label: hidden
+        formatter: default
+id: node.events.full
+targetEntityType: node
+bundle: events
+mode: full
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 4
+    settings: {  }
+    third_party_settings: {  }
+    region: main
+  field_event_date:
+    weight: 2
+    label: hidden
+    settings:
+      separator: '-'
+      format_type: medium
+      timezone_override: ''
+      fromto: both
+    third_party_settings: {  }
+    type: daterange_default
+    region: main
+  field_event_image:
+    type: image
+    weight: 1
+    region: main
+    label: hidden
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {  }
+  field_location:
+    weight: 3
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: main
+  field_meta_tags:
+    type: metatag_empty_formatter
+    weight: 5
+    region: main
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_calendar_image: true
+  field_taxonomy: true
+  field_yoast_seo: true
+  langcode: true
+  links: true

@@ -1,0 +1,94 @@
+uuid: c0a25ff6-75f4-4b41-95d0-a279b89b9379
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.page_header
+    - field.field.node.events.body
+    - field.field.node.events.field_calendar_image
+    - field.field.node.events.field_event_date
+    - field.field.node.events.field_location
+    - field.field.node.events.field_meta_tags
+    - node.type.events
+  module:
+    - datetime_range
+    - ds
+    - options
+    - text
+    - user
+third_party_settings:
+  ds:
+    layout:
+      id: bs_1col
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        layout:
+          wrapper: div
+          classes:
+            row: row
+          add_layout_class: 1
+          attributes: ''
+        regions:
+          main:
+            wrapper: div
+            classes:
+              col-sm-12: col-sm-12
+            add_region_classes: 1
+            attributes: ''
+    regions:
+      main:
+        - node_title
+        - field_event_image
+        - field_event_date
+        - field_location
+        - body
+        - node_link
+    fields:
+      node_title:
+        plugin_id: node_title
+        weight: 0
+        label: hidden
+        formatter: default
+      node_link:
+        plugin_id: node_link
+        weight: 5
+        label: hidden
+        formatter: default
+id: node.events.page_header
+targetEntityType: node
+bundle: events
+mode: page_header
+content:
+  body:
+    label: hidden
+    type: text_trimmed
+    weight: 4
+    settings:
+      trim_length: 120
+    third_party_settings: {  }
+    region: main
+  field_event_date:
+    weight: 2
+    label: hidden
+    settings:
+      separator: '-'
+      timezone_override: ''
+      date_format: 'Y-m-d\TH:i:s'
+      fromto: both
+    third_party_settings: {  }
+    type: daterange_custom
+    region: main
+  field_location:
+    weight: 3
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: main
+hidden:
+  field_calendar_image: true
+  field_meta_tags: true
+  langcode: true
+  links: true

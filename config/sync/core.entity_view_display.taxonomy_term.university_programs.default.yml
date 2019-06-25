@@ -1,0 +1,33 @@
+uuid: 4da82246-2fb7-40b0-a3fd-701423ebb032
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.university_programs.field_image
+    - taxonomy.vocabulary.university_programs
+  module:
+    - image
+    - text
+id: taxonomy_term.university_programs.default
+targetEntityType: taxonomy_term
+bundle: university_programs
+mode: default
+content:
+  description:
+    label: hidden
+    type: text_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_image:
+    weight: 1
+    label: above
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {  }
+    type: image
+    region: content
+hidden:
+  langcode: true

@@ -1,0 +1,43 @@
+uuid: 905cd47b-9b5d-40ef-b289-b828dbc61212
+langcode: en
+status: true
+dependencies: {  }
+id: content_editor
+label: 'Content Editor'
+weight: 3
+is_admin: null
+permissions:
+  - 'access content overview'
+  - 'access in-place editing'
+  - 'access toolbar'
+  - 'administer menu'
+  - 'administer nodes'
+  - 'create content translations'
+  - 'create events content'
+  - 'create media'
+  - 'create news content'
+  - 'create page content'
+  - 'create slider content'
+  - 'create url aliases'
+  - 'delete content translations'
+  - 'delete media'
+  - 'delete own events content'
+  - 'delete own news content'
+  - 'delete own page content'
+  - 'delete own slider content'
+  - 'delete own webform content'
+  - 'edit any events content'
+  - 'edit any news content'
+  - 'edit any page content'
+  - 'edit any slider content'
+  - 'edit any webform content'
+  - 'edit own article content'
+  - 'edit own events content'
+  - 'edit own news content'
+  - 'edit own page content'
+  - 'edit own slider content'
+  - 'translate events node'
+  - 'update content translations'
+  - 'update media'
+  - 'use yoast seo'
+  - 'view the administration theme'

@@ -1,0 +1,19 @@
+id: findus_field
+label: 'How to find us'
+ui_limit: ''
+properties:
+  block: 'system_menu_block:how-to-find-us'
+  use_block_title: true
+  add_block_wrappers: true
+  config:
+    id: 'system_menu_block:how-to-find-us'
+    label: ''
+    provider: system
+    label_display: visible
+    level: 1
+    depth: 0
+type: block
+type_label: 'Block field'
+entities:
+  block_content: block_content
+  node: node

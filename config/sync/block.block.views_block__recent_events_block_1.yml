@@ -1,0 +1,30 @@
+uuid: 77cf325d-75ac-430e-802c-f8f9a073346e
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.recent_events
+  module:
+    - system
+    - views
+  theme:
+    - su
+id: views_block__recent_events_block_1
+theme: su
+region: events
+weight: 0
+provider: null
+plugin: 'views_block:recent_events-block_1'
+settings:
+  id: 'views_block:recent_events-block_1'
+  label: Events
+  provider: views
+  label_display: visible
+  views_label: Events
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

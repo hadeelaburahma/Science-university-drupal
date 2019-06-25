@@ -1,0 +1,5 @@
+name: Alter lable
+type: module
+description: 'Alter lable form'
+package: Custom
+core: '8.x'

@@ -1,0 +1,22 @@
+uuid: 1201e185-2c54-4169-8635-fe09fb7b80af
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.programs
+    - field.storage.block_content.body
+  module:
+    - text
+id: block_content.programs.body
+field_name: body
+entity_type: block_content
+bundle: programs
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+field_type: text_with_summary

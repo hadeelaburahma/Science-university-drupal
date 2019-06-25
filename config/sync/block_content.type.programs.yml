@@ -1,0 +1,8 @@
+uuid: 547fdacc-b57d-45be-9e02-93619ffdcdc9
+langcode: en
+status: true
+dependencies: {  }
+id: programs
+label: Programs
+revision: 0
+description: 'university programs'

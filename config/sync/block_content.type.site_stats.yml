@@ -1,0 +1,8 @@
+uuid: dab605dc-e8a2-4b4d-8915-83dd9e9623ea
+langcode: en
+status: true
+dependencies: {  }
+id: site_stats
+label: 'Site Stats'
+revision: 0
+description: ''

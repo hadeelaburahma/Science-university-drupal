@@ -1,0 +1,11 @@
+id: event_date_start_date
+label: 'Event date (start date)'
+ui_limit: ''
+properties:
+  content:
+    value: "<div class=\"event-date\">\r\n<div class=\"event-day\">[node:field_event_date:start_date:custom:d]</div>\r\n\r\n<div class=\"event-month\">[node:field_event_date:start_date:custom:F]</div>\r\n</div>\r\n"
+    format: full_html
+type: token
+type_label: 'Token field'
+entities:
+  node: node

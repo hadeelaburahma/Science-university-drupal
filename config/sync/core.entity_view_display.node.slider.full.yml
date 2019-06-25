@@ -1,0 +1,25 @@
+uuid: 4e8738a7-347b-4c8a-a2ca-8392e41d331d
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.full
+    - field.field.node.slider.field_body
+    - field.field.node.slider.field_slider_images
+    - node.type.slider
+  module:
+    - user
+id: node.slider.full
+targetEntityType: node
+bundle: slider
+mode: full
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_body: true
+  field_slider_images: true
+  langcode: true

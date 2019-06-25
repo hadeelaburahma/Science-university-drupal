@@ -1,0 +1,63 @@
+uuid: 829f395a-5534-4102-abdd-3fe0b0cc5cdf
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.slider
+    - field.field.node.slider.field_body
+    - field.field.node.slider.field_slider_images
+    - node.type.slider
+    - responsive_image.styles.wide
+  module:
+    - ds
+    - responsive_image
+    - user
+third_party_settings:
+  ds:
+    layout:
+      id: bs_1col
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        layout:
+          wrapper: div
+          classes:
+            row: row
+          add_layout_class: 1
+          attributes: ''
+        regions:
+          main:
+            wrapper: div
+            classes:
+              col-sm-12: col-sm-12
+            add_region_classes: 1
+            attributes: ''
+    regions:
+      main:
+        - field_slider_images
+        - node_title
+    fields:
+      node_title:
+        plugin_id: node_title
+        weight: 1
+        label: hidden
+        formatter: default
+id: node.slider.slider
+targetEntityType: node
+bundle: slider
+mode: slider
+content:
+  field_slider_images:
+    type: responsive_image
+    weight: 0
+    region: main
+    label: hidden
+    settings:
+      responsive_image_style: wide
+      image_link: ''
+    third_party_settings: {  }
+hidden:
+  field_body: true
+  langcode: true
+  links: true

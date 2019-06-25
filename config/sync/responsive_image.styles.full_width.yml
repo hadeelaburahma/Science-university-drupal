@@ -1,0 +1,9 @@
+uuid: 32679460-e7da-442c-8a0a-4fce9ca41d8d
+langcode: en
+status: true
+dependencies: {  }
+id: full_width
+label: 'full width'
+image_style_mappings: {  }
+breakpoint_group: responsive_image
+fallback_image_style: '_original image_'

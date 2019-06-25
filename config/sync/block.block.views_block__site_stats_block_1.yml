@@ -1,0 +1,30 @@
+uuid: 3faf6cf1-30e6-440a-af1f-9cd6a6416944
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.site_stats
+  module:
+    - system
+    - views
+  theme:
+    - su
+id: views_block__site_stats_block_1
+theme: su
+region: site_stats
+weight: 0
+provider: null
+plugin: 'views_block:site_stats-block_1'
+settings:
+  id: 'views_block:site_stats-block_1'
+  label: ''
+  provider: views
+  label_display: '0'
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

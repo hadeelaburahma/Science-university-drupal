@@ -1,0 +1,38 @@
+uuid: ddd7eb02-fd6d-49e1-8a82-4eee4b51750d
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.programs
+    - field.storage.block_content.field_program_image
+  module:
+    - image
+id: block_content.programs.field_program_image
+field_name: field_program_image
+entity_type: block_content
+bundle: programs
+label: 'Imageprogram '
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'png gif jpg jpeg'
+  max_filesize: ''
+  max_resolution: ''
+  min_resolution: ''
+  alt_field: true
+  alt_field_required: true
+  title_field: false
+  title_field_required: false
+  default_image:
+    uuid: ''
+    alt: ''
+    title: ''
+    width: null
+    height: null
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: image

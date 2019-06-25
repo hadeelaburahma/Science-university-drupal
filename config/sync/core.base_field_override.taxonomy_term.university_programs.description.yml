@@ -1,0 +1,20 @@
+uuid: 7ba60152-aebe-4743-b8cb-4d6041c51b50
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.university_programs
+  module:
+    - text
+id: taxonomy_term.university_programs.description
+field_name: description
+entity_type: taxonomy_term
+bundle: university_programs
+label: Description
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

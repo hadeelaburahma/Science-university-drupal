@@ -1,0 +1,8 @@
+uuid: bf3a2367-476f-475c-b059-606e89d5d315
+langcode: en
+status: true
+dependencies: {  }
+id: explore
+label: Explore
+description: explore
+locked: false

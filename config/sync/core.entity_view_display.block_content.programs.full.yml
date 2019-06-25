@@ -1,0 +1,35 @@
+uuid: 88a26178-08d8-43ac-8e78-d35a4cf1e732
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.programs
+    - core.entity_view_mode.block_content.full
+    - field.field.block_content.programs.body
+    - field.field.block_content.programs.field_program_image
+  module:
+    - image
+    - text
+id: block_content.programs.full
+targetEntityType: block_content
+bundle: programs
+mode: full
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 1
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_program_image:
+    weight: 0
+    label: hidden
+    settings:
+      image_style: ''
+      image_link: content
+    third_party_settings: {  }
+    type: image
+    region: content
+hidden:
+  langcode: true

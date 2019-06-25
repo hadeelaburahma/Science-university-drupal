@@ -1,0 +1,30 @@
+uuid: 41e19ee0-b533-45da-b079-7e03a47d6e80
+langcode: en
+status: true
+dependencies:
+  module:
+    - file
+    - image
+    - node
+id: node.field_calendar_image
+field_name: field_calendar_image
+entity_type: node
+type: image
+settings:
+  uri_scheme: public
+  default_image:
+    uuid: 253c9fad-0ec4-467b-aebb-cc5673e24645
+    alt: calendar
+    title: ''
+    width: 82
+    height: 77
+  target_type: file
+  display_field: false
+  display_default: false
+module: image
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

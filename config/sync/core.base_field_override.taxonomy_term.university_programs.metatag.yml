@@ -1,0 +1,18 @@
+uuid: 321f169c-8088-48be-98f9-6ee53705a1ef
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.university_programs
+id: taxonomy_term.university_programs.metatag
+field_name: metatag
+entity_type: taxonomy_term
+bundle: university_programs
+label: Metatags
+description: 'The meta tags for the entity.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: map

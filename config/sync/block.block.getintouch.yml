@@ -1,0 +1,31 @@
+uuid: a276fc86-a7bd-4493-a6f9-2b415b104c6f
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:webform_forms:0cd2250f-831c-4b11-a517-69f845e7a975'
+  module:
+    - block_content
+    - system
+  theme:
+    - su
+id: getintouch
+theme: su
+region: get_touch
+weight: -14
+provider: null
+plugin: 'block_content:0cd2250f-831c-4b11-a517-69f845e7a975'
+settings:
+  id: 'block_content:0cd2250f-831c-4b11-a517-69f845e7a975'
+  label: 'get in touch'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: "<front>\r\n/contact"
+    negate: false
+    context_mapping: {  }

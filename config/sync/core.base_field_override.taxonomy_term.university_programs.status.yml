@@ -1,0 +1,22 @@
+uuid: 439352cd-6aed-4689-86f1-cbdf88c12e87
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.university_programs
+id: taxonomy_term.university_programs.status
+field_name: status
+entity_type: taxonomy_term
+bundle: university_programs
+label: Published
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -1,0 +1,11 @@
+uuid: 0118533b-298e-41e3-a884-e57bcfd1cd35
+langcode: en
+status: true
+dependencies:
+  config:
+    - webform.webform.template_contact
+id: webform_submission.template_contact
+target_entity_type_id: webform_submission
+target_bundle: template_contact
+default_langcode: site_default
+language_alterable: false

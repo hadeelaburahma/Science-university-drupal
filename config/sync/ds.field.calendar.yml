@@ -1,0 +1,11 @@
+id: calendar
+label: calendar
+ui_limit: ''
+properties:
+  content:
+    value: "<p><img alt=\"calendar\" data-align=\"right\" data-entity-type=\"file\" data-entity-uuid=\"76efcb28-6b79-455b-abbb-9d01a0a1a24d\" src=\"/sites/default/files/inline-images/calendar.png\" /></p>\r\n"
+    format: basic_html
+type: token
+type_label: 'Token field'
+entities:
+  node: node

@@ -1,0 +1,142 @@
+uuid: d06ccae7-957a-46de-bc7a-11bf2b3b6a85
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.events.body
+    - field.field.node.events.field_calendar_image
+    - field.field.node.events.field_event_date
+    - field.field.node.events.field_event_image
+    - field.field.node.events.field_location
+    - field.field.node.events.field_meta_tags
+    - field.field.node.events.field_taxonomy
+    - field.field.node.events.field_yoast_seo
+    - image.style.events
+    - node.type.events
+  module:
+    - datetime_range
+    - ds
+    - image
+    - options
+    - smart_trim
+    - user
+third_party_settings:
+  ds:
+    layout:
+      id: bs_1col
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        layout:
+          wrapper: div
+          classes:
+            clearfix: clearfix
+          add_layout_class: 1
+          attributes: ''
+        regions:
+          main:
+            wrapper: div
+            classes:
+              clearfix: clearfix
+            add_region_classes: 1
+            attributes: ''
+    regions:
+      main:
+        - 'dynamic_token_field:node-calendar'
+        - 'dynamic_token_field:node-event_date_start_date'
+        - field_event_image
+        - field_event_date
+        - field_location
+        - node_title
+        - body
+        - node_link
+    fields:
+      node_title:
+        plugin_id: node_title
+        weight: 5
+        label: hidden
+        formatter: default
+        settings:
+          link: true
+          wrapper: h2
+          class: ''
+      node_link:
+        plugin_id: node_link
+        weight: 7
+        label: hidden
+        formatter: default
+        settings:
+          'link text': 'learn more'
+          'link class': ''
+          wrapper: ''
+          class: ''
+      'dynamic_token_field:node-calendar':
+        plugin_id: 'dynamic_token_field:node-calendar'
+        weight: 0
+        label: hidden
+        formatter: default
+      'dynamic_token_field:node-event_date_start_date':
+        plugin_id: 'dynamic_token_field:node-event_date_start_date'
+        weight: 1
+        label: hidden
+        formatter: default
+id: node.events.teaser
+targetEntityType: node
+bundle: events
+mode: teaser
+content:
+  body:
+    type: smart_trim
+    weight: 6
+    region: main
+    label: hidden
+    settings:
+      trim_length: 120
+      trim_type: chars
+      trim_suffix: ...
+      wrap_class: trimmed
+      more_text: More
+      more_class: more-link
+      summary_handler: ignore
+      wrap_output: false
+      more_link: false
+      trim_options:
+        text: false
+        trim_zero: false
+    third_party_settings: {  }
+  field_event_date:
+    type: daterange_custom
+    weight: 3
+    region: main
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'g:i A'
+      fromto: both
+      separator: '-'
+    third_party_settings: {  }
+  field_event_image:
+    type: image
+    weight: 2
+    region: main
+    label: hidden
+    settings:
+      image_style: events
+      image_link: content
+    third_party_settings: {  }
+  field_location:
+    type: list_default
+    weight: 4
+    region: main
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_calendar_image: true
+  field_meta_tags: true
+  field_taxonomy: true
+  field_yoast_seo: true
+  langcode: true
+  links: true

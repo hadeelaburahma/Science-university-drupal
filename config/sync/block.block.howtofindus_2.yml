@@ -1,0 +1,24 @@
+uuid: 541dcc91-aac4-42ff-a7fb-a3dd7800ba14
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.how-to-find-us
+  module:
+    - system
+  theme:
+    - su
+id: howtofindus_2
+theme: su
+region: footer_third
+weight: 0
+provider: null
+plugin: 'system_menu_block:how-to-find-us'
+settings:
+  id: 'system_menu_block:how-to-find-us'
+  label: 'How  to find us'
+  provider: system
+  label_display: visible
+  level: 1
+  depth: 0
+visibility: {  }

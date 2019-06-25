@@ -1,0 +1,15 @@
+uuid: a9299384-cbbd-42f0-9e73-f79686f5fc5a
+langcode: en
+status: true
+dependencies: {  }
+name: prpgrams_image_263x263
+label: 'prpgrams image 263x263'
+effects:
+  5d8462d7-4e7f-4b12-a12f-aced189bad7f:
+    uuid: 5d8462d7-4e7f-4b12-a12f-aced189bad7f
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 263
+      height: 263
+      anchor: center-center

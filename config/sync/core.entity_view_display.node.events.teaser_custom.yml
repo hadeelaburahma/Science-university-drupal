@@ -1,0 +1,119 @@
+uuid: a3ea2cec-cefd-42d3-aa77-501127984d98
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser_custom
+    - field.field.node.events.body
+    - field.field.node.events.field_calendar_image
+    - field.field.node.events.field_event_date
+    - field.field.node.events.field_event_image
+    - field.field.node.events.field_location
+    - field.field.node.events.field_meta_tags
+    - field.field.node.events.field_taxonomy
+    - field.field.node.events.field_yoast_seo
+    - image.style.events
+    - node.type.events
+  module:
+    - datetime_range
+    - ds
+    - image
+    - options
+    - text
+    - user
+third_party_settings:
+  ds:
+    layout:
+      id: bs_1col
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        layout:
+          wrapper: div
+          classes:
+            row: row
+          add_layout_class: 1
+          attributes: ''
+        regions:
+          main:
+            wrapper: div
+            classes:
+              col-sm-12: col-sm-12
+            add_region_classes: 1
+            attributes: ''
+    regions:
+      main:
+        - field_event_image
+        - node_title
+        - field_event_date
+        - field_location
+        - body
+        - node_link
+    fields:
+      node_title:
+        plugin_id: node_title
+        weight: 1
+        label: hidden
+        formatter: default
+        settings:
+          link: true
+          wrapper: h2
+          class: ''
+      node_link:
+        plugin_id: node_link
+        weight: 5
+        label: hidden
+        formatter: default
+        settings:
+          'link text': 'Learn more'
+          'link class': ''
+          wrapper: div
+          class: MORE
+id: node.events.teaser_custom
+targetEntityType: node
+bundle: events
+mode: teaser_custom
+content:
+  body:
+    label: hidden
+    type: text_trimmed
+    weight: 4
+    settings:
+      trim_length: 120
+    third_party_settings: {  }
+    region: main
+  field_event_date:
+    weight: 2
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'd-m-Y g:i A'
+      fromto: both
+      separator: '-'
+    third_party_settings: {  }
+    type: daterange_custom
+    region: main
+  field_event_image:
+    type: image
+    weight: 0
+    region: main
+    label: hidden
+    settings:
+      image_style: events
+      image_link: content
+    third_party_settings: {  }
+  field_location:
+    weight: 3
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: main
+hidden:
+  field_calendar_image: true
+  field_meta_tags: true
+  field_taxonomy: true
+  field_yoast_seo: true
+  langcode: true
+  links: true

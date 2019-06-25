@@ -1,0 +1,31 @@
+uuid: 33188b4c-fbe3-4abb-8c24-f97c84780acc
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:d6d6e32c-d728-4020-a7f9-51e53587f9d4'
+  module:
+    - block_content
+    - system
+  theme:
+    - su
+id: admisson
+theme: su
+region: admission
+weight: 0
+provider: null
+plugin: 'block_content:d6d6e32c-d728-4020-a7f9-51e53587f9d4'
+settings:
+  id: 'block_content:d6d6e32c-d728-4020-a7f9-51e53587f9d4'
+  label: Admisson
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

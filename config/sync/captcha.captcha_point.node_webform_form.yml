@@ -1,0 +1,7 @@
+uuid: 2fccf7c2-96b6-4141-824f-e2844023da32
+langcode: en
+status: true
+dependencies: {  }
+formId: node_webform_form
+captchaType: recaptcha/reCAPTCHA
+label: get_in_touch_form

@@ -1,0 +1,30 @@
+uuid: 38c2fb06-c5d3-4ae2-a7db-2e255164d332
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.slider_slick
+  module:
+    - system
+    - views
+  theme:
+    - su
+id: views_block__slider_slick_block_1
+theme: su
+region: slider
+weight: 0
+provider: null
+plugin: 'views_block:slider_slick-block_1'
+settings:
+  id: 'views_block:slider_slick-block_1'
+  label: ''
+  provider: views
+  label_display: '0'
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

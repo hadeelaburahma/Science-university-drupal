@@ -1,0 +1,43 @@
+uuid: 3aba0ce3-1a13-48a3-8691-26619473e50f
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.site_stats
+    - field.field.block_content.site_stats.body
+    - field.field.block_content.site_stats.field_info
+    - field.field.block_content.site_stats.field_stat_logo
+  module:
+    - responsive_image
+    - text
+id: block_content.site_stats.default
+targetEntityType: block_content
+bundle: site_stats
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_info:
+    weight: 1
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_stat_logo:
+    weight: 0
+    label: hidden
+    settings:
+      image_link: ''
+      responsive_image_style: ''
+    third_party_settings: {  }
+    type: responsive_image
+    region: content
+hidden:
+  langcode: true

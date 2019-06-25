@@ -1,0 +1,18 @@
+uuid: 7074ae15-8b8c-460e-abe4-594aef44db59
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.university_programs
+id: taxonomy_term.university_programs.changed
+field_name: changed
+entity_type: taxonomy_term
+bundle: university_programs
+label: Changed
+description: 'The time that the term was last edited.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: changed

@@ -1,0 +1,24 @@
+uuid: 9308f373-7be3-4b0e-8a72-f9523e7ddae6
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.social-media
+  module:
+    - system
+  theme:
+    - su
+id: socialmedia_2
+theme: su
+region: footer_fourth
+weight: -12
+provider: null
+plugin: 'system_menu_block:social-media'
+settings:
+  id: 'system_menu_block:social-media'
+  label: 'follow us'
+  provider: system
+  label_display: visible
+  level: 1
+  depth: 0
+visibility: {  }

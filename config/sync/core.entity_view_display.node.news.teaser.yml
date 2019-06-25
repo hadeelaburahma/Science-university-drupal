@@ -1,0 +1,101 @@
+uuid: 4d7bd030-8c31-4f29-9bdb-6ba54b750947
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.news.body
+    - field.field.node.news.field_meta_tags
+    - field.field.node.news.field_news_date
+    - field.field.node.news.field_yoast_seo
+    - node.type.news
+  module:
+    - datetime
+    - ds
+    - smart_trim
+    - user
+third_party_settings:
+  ds:
+    layout:
+      id: bs_1col
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        layout:
+          wrapper: div
+          classes:
+            row: row
+          add_layout_class: 1
+          attributes: ''
+        regions:
+          main:
+            wrapper: div
+            classes:
+              col-sm-12: col-sm-12
+            add_region_classes: 1
+            attributes: ''
+    regions:
+      main:
+        - field_news_date
+        - node_title
+        - body
+        - node_link
+    fields:
+      node_title:
+        plugin_id: node_title
+        weight: 1
+        label: hidden
+        formatter: default
+        settings:
+          link: true
+          wrapper: h2
+          class: ''
+      node_link:
+        plugin_id: node_link
+        weight: 3
+        label: hidden
+        formatter: default
+        settings:
+          'link text': 'Read more'
+          'link class': read-more
+          wrapper: ''
+          class: ''
+id: node.news.teaser
+targetEntityType: node
+bundle: news
+mode: teaser
+content:
+  body:
+    type: smart_trim
+    weight: 2
+    region: main
+    label: hidden
+    settings:
+      trim_length: 120
+      trim_type: chars
+      trim_suffix: ...
+      wrap_class: trimmed
+      more_text: More
+      more_class: more-link
+      summary_handler: ignore
+      wrap_output: false
+      more_link: false
+      trim_options:
+        text: false
+        trim_zero: false
+    third_party_settings: {  }
+  field_news_date:
+    type: datetime_custom
+    weight: 0
+    region: main
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'F d,Y'
+    third_party_settings: {  }
+hidden:
+  field_meta_tags: true
+  field_yoast_seo: true
+  langcode: true
+  links: true

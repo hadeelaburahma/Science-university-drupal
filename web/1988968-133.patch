@@ -1,0 +1,754 @@
+diff --git a/core/.eslintrc.json b/core/.eslintrc.json
+index e3d505cadf..77a9c1f171 100644
+--- a/core/.eslintrc.json
++++ b/core/.eslintrc.json
+@@ -16,6 +16,7 @@
+     "domready": true,
+     "jQuery": true,
+     "_": true,
++    "loadjs": true,
+     "matchMedia": true,
+     "Backbone": true,
+     "Modernizr": true,
+diff --git a/core/assets/vendor/loadjs/loadjs.min.js b/core/assets/vendor/loadjs/loadjs.min.js
+new file mode 100644
+index 0000000000..bc398a6b08
+--- /dev/null
++++ b/core/assets/vendor/loadjs/loadjs.min.js
+@@ -0,0 +1,267 @@
++loadjs = (function () {
++  /**
++   * Global dependencies.
++   * @global {Object} document - DOM
++   */
++
++  var devnull = function() {},
++    bundleIdCache = {},
++    bundleResultCache = {},
++    bundleCallbackQueue = {};
++
++
++  /**
++   * Subscribe to bundle load event.
++   * @param {string[]} bundleIds - Bundle ids
++   * @param {Function} callbackFn - The callback function
++   */
++  function subscribe(bundleIds, callbackFn) {
++    // listify
++    bundleIds = bundleIds.push ? bundleIds : [bundleIds];
++
++    var depsNotFound = [],
++      i = bundleIds.length,
++      numWaiting = i,
++      fn,
++      bundleId,
++      r,
++      q;
++
++    // define callback function
++    fn = function (bundleId, pathsNotFound) {
++      if (pathsNotFound.length) depsNotFound.push(bundleId);
++
++      numWaiting--;
++      if (!numWaiting) callbackFn(depsNotFound);
++    };
++
++    // register callback
++    while (i--) {
++      bundleId = bundleIds[i];
++
++      // execute callback if in result cache
++      r = bundleResultCache[bundleId];
++      if (r) {
++        fn(bundleId, r);
++        continue;
++      }
++
++      // add to callback queue
++      q = bundleCallbackQueue[bundleId] = bundleCallbackQueue[bundleId] || [];
++      q.push(fn);
++    }
++  }
++
++
++  /**
++   * Publish bundle load event.
++   * @param {string} bundleId - Bundle id
++   * @param {string[]} pathsNotFound - List of files not found
++   */
++  function publish(bundleId, pathsNotFound) {
++    // exit if id isn't defined
++    if (!bundleId) return;
++
++    var q = bundleCallbackQueue[bundleId];
++
++    // cache result
++    bundleResultCache[bundleId] = pathsNotFound;
++
++    // exit if queue is empty
++    if (!q) return;
++
++    // empty callback queue
++    while (q.length) {
++      q[0](bundleId, pathsNotFound);
++      q.splice(0, 1);
++    }
++  }
++
++
++  /**
++   * Load individual file.
++   * @param {string} path - The file path
++   * @param {Function} callbackFn - The callback function
++   */
++  function loadFile(path, callbackFn, args, numTries) {
++    var doc = document,
++      async = args.async,
++      maxTries = (args.numRetries || 0) + 1,
++      beforeCallbackFn = args.before || devnull,
++      isCss,
++      e;
++
++    numTries = numTries || 0;
++
++    if (/(^css!|\.css$)/.test(path)) {
++      isCss = true;
++
++      // css
++      e = doc.createElement('link');
++      e.rel = 'stylesheet';
++      e.href = path.replace(/^css!/, '');  // remove "css!" prefix
++    } else {
++      // javascript
++      e = doc.createElement('script');
++      e.src = path;
++      e.async = async === undefined ? true : async;
++    }
++
++    e.onload = e.onerror = e.onbeforeload = function (ev) {
++      var result = ev.type[0];
++
++      // Note: The following code isolates IE using `hideFocus` and treats empty
++      // stylesheets as failures to get around lack of onerror support
++      if (isCss && 'hideFocus' in e) {
++        try {
++          if (!e.sheet.cssText.length) result = 'e';
++        } catch (x) {
++          // sheets objects created from load errors don't allow access to
++          // `cssText`
++          result = 'e';
++        }
++      }
++
++      // handle retries in case of load failure
++      if (result == 'e') {
++        // increment counter
++        numTries += 1;
++
++        // exit function and try again
++        if (numTries < maxTries) {
++          return loadFile(path, callbackFn, args, numTries);
++        }
++      }
++
++      // execute callback
++      callbackFn(path, result, ev.defaultPrevented);
++    };
++
++    // add to document (unless callback returns `false`)
++    if (beforeCallbackFn(path, e) !== false) doc.head.appendChild(e);
++  }
++
++
++  /**
++   * Load multiple files.
++   * @param {string[]} paths - The file paths
++   * @param {Function} callbackFn - The callback function
++   */
++  function loadFiles(paths, callbackFn, args) {
++    // listify paths
++    paths = paths.push ? paths : [paths];
++
++    var numWaiting = paths.length,
++      x = numWaiting,
++      pathsNotFound = [],
++      fn,
++      i;
++
++    // define callback function
++    fn = function(path, result, defaultPrevented) {
++      // handle error
++      if (result == 'e') pathsNotFound.push(path);
++
++      // handle beforeload event. If defaultPrevented then that means the load
++      // will be blocked (ex. Ghostery/ABP on Safari)
++      if (result == 'b') {
++        if (defaultPrevented) pathsNotFound.push(path);
++        else return;
++      }
++
++      numWaiting--;
++      if (!numWaiting) callbackFn(pathsNotFound);
++    };
++
++    // load scripts
++    for (i=0; i < x; i++) loadFile(paths[i], fn, args);
++  }
++
++
++  /**
++   * Initiate script load and register bundle.
++   * @param {(string|string[])} paths - The file paths
++   * @param {(string|Function)} [arg1] - The bundleId or success callback
++   * @param {Function} [arg2] - The success or error callback
++   * @param {Function} [arg3] - The error callback
++   */
++  function loadjs(paths, arg1, arg2) {
++    var bundleId,
++      args;
++
++    // bundleId (if string)
++    if (arg1 && arg1.trim) bundleId = arg1;
++
++    // args (default is {})
++    args = (bundleId ? arg2 : arg1) || {};
++
++    // throw error if bundle is already defined
++    if (bundleId) {
++      if (bundleId in bundleIdCache) {
++        throw "LoadJS";
++      } else {
++        bundleIdCache[bundleId] = true;
++      }
++    }
++
++    // load scripts
++    loadFiles(paths, function (pathsNotFound) {
++      // success and error callbacks
++      if (pathsNotFound.length) (args.error || devnull)(pathsNotFound);
++      else (args.success || devnull)();
++
++      // publish bundle load event
++      publish(bundleId, pathsNotFound);
++    }, args);
++  }
++
++
++  /**
++   * Execute callbacks when dependencies have been satisfied.
++   * @param {(string|string[])} deps - List of bundle ids
++   * @param {Object} args - success/error arguments
++   */
++  loadjs.ready = function ready(deps, args) {
++    // subscribe to bundle load event
++    subscribe(deps, function (depsNotFound) {
++      // execute callbacks
++      if (depsNotFound.length) (args.error || devnull)(depsNotFound);
++      else (args.success || devnull)();
++    });
++
++    return loadjs;
++  };
++
++
++  /**
++   * Manually satisfy bundle dependencies.
++   * @param {string} bundleId - The bundle id
++   */
++  loadjs.done = function done(bundleId) {
++    publish(bundleId, []);
++  };
++
++
++  /**
++   * Reset loadjs dependencies statuses
++   */
++  loadjs.reset = function reset() {
++    bundleIdCache = {};
++    bundleResultCache = {};
++    bundleCallbackQueue = {};
++  };
++
++
++  /**
++   * Determine if bundle has already been defined
++   * @param String} bundleId - The bundle id
++   */
++  loadjs.isDefined = function isDefined(bundleId) {
++    return bundleId in bundleIdCache;
++  };
++
++
++// export
++  return loadjs;
++
++})();
+diff --git a/core/core.libraries.yml b/core/core.libraries.yml
+index 918a36afd3..fd1088b2c3 100644
+--- a/core/core.libraries.yml
++++ b/core/core.libraries.yml
+@@ -95,6 +95,7 @@ drupal.ajax:
+     - core/drupalSettings
+     - core/drupal.progress
+     - core/jquery.once
++    - core/loadjs
+ 
+ drupal.announce:
+   version: VERSION
+@@ -850,6 +851,16 @@ jquery.ui.widget:
+   dependencies:
+     - core/jquery.ui
+ 
++loadjs:
++  remote: https://github.com/muicss/loadjs
++  version: 3.5.1
++  license:
++    name: MIT
++    url: https://github.com/muicss/loadjs/blob/master/LICENSE.txt
++    gpl-compatible: true
++  js:
++    assets/vendor/loadjs/loadjs.min.js: {}
++
+ matchmedia:
+   remote: https://github.com/paulirish/matchMedia.js
+   version: &matchmedia_version 0.2.0
+diff --git a/core/lib/Drupal/Core/Ajax/AddJsCommand.php b/core/lib/Drupal/Core/Ajax/AddJsCommand.php
+new file mode 100644
+index 0000000000..ed4e8a5671
+--- /dev/null
++++ b/core/lib/Drupal/Core/Ajax/AddJsCommand.php
+@@ -0,0 +1,69 @@
++<?php
++
++namespace Drupal\Core\Ajax;
++
++/**
++ * An AJAX command for adding JS to the page via ajax.
++ *
++ * This command is implemented by Drupal.AjaxCommands.prototype.add_js()
++ * defined in misc/ajax.js.
++ *
++ * @see misc/ajax.js
++ *
++ * @ingroup ajax
++ */
++class AddJsCommand implements CommandInterface {
++
++  /**
++   * A CSS selector string.
++   *
++   * If the command is a response to a request from an #ajax form element then
++   * this value can be NULL.
++   *
++   * @var string|null
++   */
++  protected $selector;
++
++  /**
++   * An array containing the attributes of the scripts to be added to the page.
++   *
++   * @var string[]
++   */
++  protected $scripts;
++
++  /**
++   * The DOM manipulation method to be used.
++   *
++   * @var string[]
++   */
++  protected $method;
++
++  /**
++   * Constructs an AddJsCommand.
++   *
++   * @param string|null $selector
++   *   A CSS selector.
++   * @param array $scripts
++   *   An array containing the attributes of the scripts to be added to the page.
++   * @param string $method
++   *   The DOM manipulation method to be used.
++   */
++  public function __construct($selector, array $scripts, $method = 'appendChild') {
++    $this->selector = $selector;
++    $this->scripts = $scripts;
++    $this->method = $method;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function render() {
++    return [
++      'command' => 'add_js',
++      'selector' => $this->selector,
++      'data' => $this->scripts,
++      'method' => $this->method,
++    ];
++  }
++
++}
+diff --git a/core/lib/Drupal/Core/Ajax/AjaxResponseAttachmentsProcessor.php b/core/lib/Drupal/Core/Ajax/AjaxResponseAttachmentsProcessor.php
+index ee5208b078..13a7e927e1 100644
+--- a/core/lib/Drupal/Core/Ajax/AjaxResponseAttachmentsProcessor.php
++++ b/core/lib/Drupal/Core/Ajax/AjaxResponseAttachmentsProcessor.php
+@@ -174,11 +174,17 @@ protected function buildAttachmentsCommands(AjaxResponse $response, Request $req
+     }
+     if ($js_assets_header) {
+       $js_header_render_array = $this->jsCollectionRenderer->render($js_assets_header);
+-      $resource_commands[] = new PrependCommand('head', $this->renderer->renderPlain($js_header_render_array));
++      $scripts_attributes = array_map(function ($render_array) {
++        return $render_array['#attributes']; 
++      }, $js_header_render_array);
++      $resource_commands[] = new AddJsCommand('head', $scripts_attributes, 'insertBefore');
+     }
+     if ($js_assets_footer) {
+       $js_footer_render_array = $this->jsCollectionRenderer->render($js_assets_footer);
+-      $resource_commands[] = new AppendCommand('body', $this->renderer->renderPlain($js_footer_render_array));
++      $scripts_attributes = array_map(function ($render_array) {
++        return $render_array['#attributes']; 
++      }, $js_footer_render_array);
++      $resource_commands[] = new AddJsCommand('body', $scripts_attributes, 'appendChild');
+     }
+     foreach (array_reverse($resource_commands) as $resource_command) {
+       $response->addCommand($resource_command, TRUE);
+diff --git a/core/misc/ajax.es6.js b/core/misc/ajax.es6.js
+index 440e5906dc..000cf96ffd 100644
+--- a/core/misc/ajax.es6.js
++++ b/core/misc/ajax.es6.js
+@@ -11,7 +11,7 @@
+  * included to provide Ajax capabilities.
+  */
+ 
+-(function($, window, Drupal, drupalSettings) {
++(function($, window, Drupal, drupalSettings, loadjs) {
+   /**
+    * Attaches the Ajax behavior to each Ajax form element.
+    *
+@@ -392,6 +392,11 @@
+ 
+     $.extend(this, defaults, elementSettings);
+ 
++    /**
++     * @type {null|Promise}
++     */
++    this.ajaxDeferred = null;
++
+     /**
+      * @type {Drupal.AjaxCommands}
+      */
+@@ -549,7 +554,16 @@
+         return ajax.success(response, status);
+       },
+       complete(xmlhttprequest, status) {
+-        ajax.ajaxing = false;
++        if ((ajax.ajaxDeferred !== null && ajax.ajaxDeferred.then !== null) &&
++          (typeof ajax.ajaxDeferred === 'object' && typeof ajax.ajaxDeferred.then === 'function')) {
++          ajax.ajaxDeferred.then(() => {
++            ajax.ajaxing = false;
++          });
++        }
++        else {
++          ajax.ajaxing = false;
++        }
++
+         if (status === 'error' || status === 'parsererror') {
+           return ajax.error(xmlhttprequest, ajax.url);
+         }
+@@ -960,6 +974,8 @@
+    *   XMLHttpRequest status.
+    */
+   Drupal.Ajax.prototype.success = function(response, status) {
++    this.ajaxDeferred = $.Deferred();
++
+     // Remove the progress element.
+     if (this.progress.element) {
+       $(this.progress.element).remove();
+@@ -981,17 +997,30 @@
+     // Track if any command is altering the focus so we can avoid changing the
+     // focus set by the Ajax command.
+     let focusChanged = false;
+-    Object.keys(response || {}).forEach(i => {
+-      if (response[i].command && this.commands[response[i].command]) {
+-        this.commands[response[i].command](this, response[i], status);
+-        if (
+-          response[i].command === 'invoke' &&
+-          response[i].method === 'focus'
+-        ) {
++    const responseKeys = Object.keys(response);
++    responseKeys.reduce((deferredCommand, key, currentIndex) => deferredCommand.then(() => {
++      const command = response[key].command;
++      if (command && this.commands[command]) {
++        if (command === 'invoke' && response[key].method === 'focus') {
+           focusChanged = true;
+         }
++
++        const result = this.commands[command](this, response[key], status);
++        if (typeof result === 'object' && typeof result.then === 'function') {
++          // Handle a promise.
++          result.done(() => {
++            if (currentIndex + 1 === responseKeys.length) {
++              this.ajaxDeferred.resolve();
++            }
++          });
++          return result;
++        }
+       }
+-    });
++
++      if (currentIndex + 1 === responseKeys.length) {
++        this.ajaxDeferred.resolve();
++      }
++    }), $.Deferred().resolve());
+ 
+     // If the focus hasn't be changed by the ajax commands, try to refocus the
+     // triggering element or one of its parents if that element does not exist
+@@ -1534,5 +1563,44 @@
+         } while (match);
+       }
+     },
++    add_js(ajax, response) {
++      const deferred = $.Deferred();
++      const scriptsSrc = response.data.map((script) => {
++        // loadjs requires a unique ID, AJAX instances' `instanceIndex` are
++        // guaranteed to be unique.
++        // @see Drupal.behaviors.AJAX.detach
++        const uniqueBundleID = script.src + ajax.instanceIndex;
++        loadjs(script.src, uniqueBundleID, {
++          async: !!script.async,
++          before(path, scriptEl) {
++            let selector = 'body';
++            if (response.selector) {
++              selector = response.selector;
++            }
++            if (script.defer) {
++              scriptEl.defer = true;
++            }
++            // To avoid synchronous XMLHttpRequest on the main thread and break
++            // load dependency, it should not use jQuery.
++            const parentEl = document.querySelector(selector);
++            if (response.method === 'insertBefore') {
++              parentEl.insertBefore(scriptEl, parentEl.firstChild);
++            }
++            else {
++              parentEl[response.method](scriptEl);
++            }
++            // Return `false` to bypass loadjs' default DOM insertion mechanism.
++            return false;
++          },
++        });
++        return uniqueBundleID;
++      });
++      loadjs.ready(scriptsSrc, {
++        success() {
++          deferred.resolve();
++        },
++      });
++      return deferred.promise();
++    },
+   };
+-})(jQuery, window, Drupal, drupalSettings);
++})(jQuery, window, Drupal, drupalSettings, loadjs);
+diff --git a/core/misc/ajax.js b/core/misc/ajax.js
+index 73b4dcca69..4331f09e50 100644
+--- a/core/misc/ajax.js
++++ b/core/misc/ajax.js
+@@ -4,9 +4,11 @@
+ * https://www.drupal.org/node/2815083
+ * @preserve
+ **/
++var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
++
+ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+ 
+-(function ($, window, Drupal, drupalSettings) {
++(function ($, window, Drupal, drupalSettings, loadjs) {
+   Drupal.behaviors.AJAX = {
+     attach: function attach(context, settings) {
+       function loadAjaxBehavior(base) {
+@@ -168,6 +170,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
+ 
+     $.extend(this, defaults, elementSettings);
+ 
++    this.ajaxDeferred = null;
++
+     this.commands = new Drupal.AjaxCommands();
+ 
+     this.instanceIndex = false;
+@@ -234,7 +238,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
+         return ajax.success(response, status);
+       },
+       complete: function complete(xmlhttprequest, status) {
+-        ajax.ajaxing = false;
++        if (ajax.ajaxDeferred !== null && ajax.ajaxDeferred.then !== null && _typeof(ajax.ajaxDeferred) === 'object' && typeof ajax.ajaxDeferred.then === 'function') {
++          ajax.ajaxDeferred.then(function () {
++            ajax.ajaxing = false;
++          });
++        } else {
++          ajax.ajaxing = false;
++        }
++
+         if (status === 'error' || status === 'parsererror') {
+           return ajax.error(xmlhttprequest, ajax.url);
+         }
+@@ -419,6 +430,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
+   Drupal.Ajax.prototype.success = function (response, status) {
+     var _this = this;
+ 
++    this.ajaxDeferred = $.Deferred();
++
+     if (this.progress.element) {
+       $(this.progress.element).remove();
+     }
+@@ -430,14 +443,31 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
+     var elementParents = $(this.element).parents('[data-drupal-selector]').addBack().toArray();
+ 
+     var focusChanged = false;
+-    Object.keys(response || {}).forEach(function (i) {
+-      if (response[i].command && _this.commands[response[i].command]) {
+-        _this.commands[response[i].command](_this, response[i], status);
+-        if (response[i].command === 'invoke' && response[i].method === 'focus') {
+-          focusChanged = true;
++    var responseKeys = Object.keys(response);
++    responseKeys.reduce(function (deferredCommand, key, currentIndex) {
++      return deferredCommand.then(function () {
++        var command = response[key].command;
++        if (command && _this.commands[command]) {
++          if (command === 'invoke' && response[key].method === 'focus') {
++            focusChanged = true;
++          }
++
++          var result = _this.commands[command](_this, response[key], status);
++          if ((typeof result === 'undefined' ? 'undefined' : _typeof(result)) === 'object' && typeof result.then === 'function') {
++            result.done(function () {
++              if (currentIndex + 1 === responseKeys.length) {
++                _this.ajaxDeferred.resolve();
++              }
++            });
++            return result;
++          }
+         }
+-      }
+-    });
++
++        if (currentIndex + 1 === responseKeys.length) {
++          _this.ajaxDeferred.resolve();
++        }
++      });
++    }, $.Deferred().resolve());
+ 
+     if (!focusChanged && this.element && !$(this.element).data('disable-refocus')) {
+       var target = false;
+@@ -628,6 +658,40 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
+           document.styleSheets[0].addImport(match[1]);
+         } while (match);
+       }
++    },
++    add_js: function add_js(ajax, response) {
++      var deferred = $.Deferred();
++      var scriptsSrc = response.data.map(function (script) {
++        var uniqueBundleID = script.src + ajax.instanceIndex;
++        loadjs(script.src, uniqueBundleID, {
++          async: !!script.async,
++          before: function before(path, scriptEl) {
++            var selector = 'body';
++            if (response.selector) {
++              selector = response.selector;
++            }
++            if (script.defer) {
++              scriptEl.defer = true;
++            }
++
++            var parentEl = document.querySelector(selector);
++            if (response.method === 'insertBefore') {
++              parentEl.insertBefore(scriptEl, parentEl.firstChild);
++            } else {
++              parentEl[response.method](scriptEl);
++            }
++
++            return false;
++          }
++        });
++        return uniqueBundleID;
++      });
++      loadjs.ready(scriptsSrc, {
++        success: function success() {
++          deferred.resolve();
++        }
++      });
++      return deferred.promise();
+     }
+   };
+-})(jQuery, window, Drupal, drupalSettings);
+\ No newline at end of file
++})(jQuery, window, Drupal, drupalSettings, loadjs);
+diff --git a/core/modules/big_pipe/tests/src/FunctionalJavascript/BigPipeRegressionTest.php b/core/modules/big_pipe/tests/src/FunctionalJavascript/BigPipeRegressionTest.php
+index f4cd5108bf..e68bff750e 100644
+--- a/core/modules/big_pipe/tests/src/FunctionalJavascript/BigPipeRegressionTest.php
++++ b/core/modules/big_pipe/tests/src/FunctionalJavascript/BigPipeRegressionTest.php
+@@ -105,10 +105,11 @@ public function testCommentForm_2698811() {
+       $comment->save();
+     }
+     $this->drupalGet($node->toUrl()->toString());
++    $this->assertSession()->assertWaitOnAjaxRequest();
+     // Confirm that CKEditor loaded.
+     $javascript = <<<JS
+     (function(){
+-      return Object.keys(CKEDITOR.instances).length > 0;
++      return typeof CKEDITOR !== 'undefined' && typeof CKEDITOR.instances !== 'undefined' && Object.keys(CKEDITOR.instances).length > 0;
+     }());
+ JS;
+     $this->assertJsCondition($javascript);
+diff --git a/core/modules/quickedit/js/quickedit.es6.js b/core/modules/quickedit/js/quickedit.es6.js
+index be5a929efb..7a3320bfda 100644
+--- a/core/modules/quickedit/js/quickedit.es6.js
++++ b/core/modules/quickedit/js/quickedit.es6.js
+@@ -178,12 +178,12 @@
+       url: Drupal.url('quickedit/attachments'),
+       submit: { 'editors[]': missingEditors },
+     });
+-    // Implement a scoped insert AJAX command: calls the callback after all AJAX
++    // Implement a scoped add_js AJAX command: calls the callback after all AJAX
+     // command functions have been executed (hence the deferred calling).
+-    const realInsert = Drupal.AjaxCommands.prototype.insert;
+-    loadEditorsAjax.commands.insert = function(ajax, response, status) {
++    const realAddJsCommand = Drupal.AjaxCommands.prototype.add_js;
++    loadEditorsAjax.commands.add_js = function (ajax, response, status) {
+       _.defer(callback);
+-      realInsert(ajax, response, status);
++      realAddJsCommand(ajax, response, status);
+     };
+     // Trigger the AJAX request, which will should return AJAX commands to
+     // insert any missing attachments.
+diff --git a/core/modules/quickedit/js/quickedit.js b/core/modules/quickedit/js/quickedit.js
+index 56bb74646a..d52b54640c 100644
+--- a/core/modules/quickedit/js/quickedit.js
++++ b/core/modules/quickedit/js/quickedit.js
+@@ -86,10 +86,10 @@
+       submit: { 'editors[]': missingEditors }
+     });
+ 
+-    var realInsert = Drupal.AjaxCommands.prototype.insert;
+-    loadEditorsAjax.commands.insert = function (ajax, response, status) {
++    var realAddJsCommand = Drupal.AjaxCommands.prototype.add_js;
++    loadEditorsAjax.commands.add_js = function (ajax, response, status) {
+       _.defer(callback);
+-      realInsert(ajax, response, status);
++      realAddJsCommand(ajax, response, status);
+     };
+ 
+     loadEditorsAjax.execute();
+diff --git a/core/modules/quickedit/src/Tests/QuickEditLoadingTest.php b/core/modules/quickedit/src/Tests/QuickEditLoadingTest.php
+index 61af1f52b6..67b3bf9cad 100644
+--- a/core/modules/quickedit/src/Tests/QuickEditLoadingTest.php
++++ b/core/modules/quickedit/src/Tests/QuickEditLoadingTest.php
+@@ -203,8 +203,8 @@ public function testUserWithPermission() {
+     $this->assertIdentical(2, count($ajax_commands), 'The attachments HTTP request results in two AJAX commands.');
+     // First command: settings.
+     $this->assertIdentical('settings', $ajax_commands[0]['command'], 'The first AJAX command is a settings command.');
+-    // Second command: insert libraries into DOM.
+-    $this->assertIdentical('insert', $ajax_commands[1]['command'], 'The second AJAX command is an append command.');
++    // Second command: add asset libraries' JS to DOM.
++    $this->assertIdentical('add_js', $ajax_commands[1]['command'], 'The second AJAX command is an append command.');
+     $this->assertTrue(in_array('quickedit/quickedit.inPlaceEditor.form', explode(',', $ajax_commands[0]['settings']['ajaxPageState']['libraries'])), 'The quickedit.inPlaceEditor.form library is loaded.');
+ 
+     // Retrieving the form for this field should result in a 200 response,

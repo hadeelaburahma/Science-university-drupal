@@ -1,0 +1,9 @@
+uuid: 50f6e4f8-14b3-40cc-8b1c-16e25675037c
+langcode: en
+status: true
+dependencies: {  }
+name: 'university programs'
+vid: university_programs
+description: 'Programs of SU'
+hierarchy: 0
+weight: 0

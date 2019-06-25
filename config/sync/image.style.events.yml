@@ -1,0 +1,15 @@
+uuid: c689a0bc-d980-488b-b192-9547333893fc
+langcode: en
+status: true
+dependencies: {  }
+name: events
+label: recent-events
+effects:
+  cb532078-7c04-4fb4-a82a-84fdb40a3f63:
+    uuid: cb532078-7c04-4fb4-a82a-84fdb40a3f63
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 360
+      height: 218
+      anchor: center-center

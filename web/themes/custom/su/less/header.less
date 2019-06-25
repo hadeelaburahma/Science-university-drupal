@@ -1,0 +1,266 @@
+@import "variables.less";
+
+header {
+  &.navbar {
+    border: none;
+    margin-bottom: 0;
+  }
+
+  .navbar-nav {
+    float: none;
+
+    li {
+      float: none;
+      display: inline-block;
+      padding: 0 20px;
+
+      a {
+        text-transform: uppercase;
+        font-size: 14px;
+        font-family: @main-font-semibold;
+      }
+
+      @media (max-width: @mobile) {
+        width: 100%;
+      }
+    }
+  }
+
+  .top-header {
+    display: inline-block;
+    width: 100%;
+    clear: both;
+    background-color: white;
+    height: 74px;
+
+    .logo {
+      margin: 14px;
+
+      @media(max-width: @mobile) {
+        padding-left: 0;
+      }
+    }
+
+    .search-block-form {
+      position: relative;
+      float: right;
+      margin: 25px auto;
+      width: 25%;
+      display: inline-block;
+
+      @media(max-width: @ipadpro) {
+        margin-right: 20px;
+      }
+      @media(max-width: @mobile) {
+        margin-right: 80px;
+      }
+      form {
+        width: 100%;
+        background-color: transparent;
+        padding: 0;
+        display: none;
+        @media(max-width: @mobile){
+          margin-top: -8px;
+        }
+
+        .form-group {
+          width: 100%;
+        }
+
+        button {
+          background-color: @prime-color;
+        }
+
+        input {
+          &#edit-keys {
+            height: 33px;
+          }
+        }
+      }
+    }
+
+    .search-icon {
+      position: absolute;
+      right: -35px;
+      top: -1px;
+      font-size: 25px;
+    }
+
+    .nav {
+      float: right;
+      margin: 25px 40px;
+
+      @media(max-width: @mobile) {
+        display: none;
+      }
+
+      li {
+        display: inline-block;
+
+        &:hover {
+          background-color: @secondary-color;
+          color: @icons-color;
+        }
+
+        a {
+          padding: 5px;
+
+          &:hover {
+            background-color: transparent;
+          }
+
+          svg {
+            color: @secondary-color;
+            background-color: @icons-color;
+            font-size: 14px;
+            padding: 2px;
+            height: 23px;
+            width: 23px;
+
+            &:hover {
+              background-color: @prime-color;
+              //color: blue;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .menu-header {
+    background-color: @prime-color;
+
+    #navbar-collapse {
+      text-align: center;
+
+      li {
+        padding: 0 2%;
+
+        a {
+          color: @secondary-color;
+          padding: 10px;
+
+          &.active-trail {
+            &.is-active {
+              color: @prime-color;
+              background-color: @secondary-color;
+            }
+          }
+
+          &:hover {
+            color: @prime-color;
+            background-color: @secondary-color;
+          }
+        }
+
+        &.active {
+          &.active-trail {
+            color: @prime-color;
+            background-color: @secondary-color;
+          }
+        }
+
+        &:hover {
+          color: @prime-color;
+          background-color: @secondary-color;
+        }
+      }
+    }
+  }
+}
+
+.user-logged-in {
+  .top-header {
+    .search-block-form {
+      margin-right: 30px;
+      display: inline-block;
+
+      @media(max-width: @mobile) {
+        margin-right: 80px;
+      }
+    }
+  }
+}
+
+//inner pages title
+.slider {
+  position: relative;
+
+  .field--name-field-block-image {
+    position: relative;
+    margin-bottom: 80px;
+
+    img {
+      width: 100%;
+      height: 12vw;
+
+      @media(max-width: @mobile) {
+        height: 80px;
+      }
+    }
+  }
+
+  h1 {
+    &.page-header {
+      position: absolute;
+      width: 100%;
+      top: 20%;
+      color: @secondary-color;
+      font-family: @main-font-semibold;
+      font-size: 3vw;
+      text-align: center;
+      border-bottom: none;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+
+      @media(max-width: @mobile) {
+        top: 2%;
+        font-size: 35px;
+      }
+    }
+  }
+}
+
+.search-block-form {
+  width: 0 !important;
+
+  .search-icon {
+    top: -1px;
+    @media(max-width:@mobile){
+      right: -25px !important;
+      top: 59px !important;
+    }
+    &:after {
+      content: '\f002';
+      font-family: FontAwesome;
+      font-size: 25px;
+      cursor: pointer;
+      color: @icons-color;
+
+      &:hover {
+        color: @prime-color;
+      }
+    }
+  }
+
+  &.open {
+    width: 25% !important;
+    @media(max-width: @mobile){
+      width: 75% !important;
+      }
+
+    .search-icon {
+      @media(max-width:@mobile){
+        right: -25px !important;
+    top: -11px !important;
+      }
+      &:after {
+        content: '\f00d';
+      }
+    }
+
+    #search-block-form {
+      display: block
+    }
+  }
+}

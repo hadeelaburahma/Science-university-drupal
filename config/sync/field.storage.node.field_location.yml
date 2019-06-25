@@ -1,0 +1,57 @@
+uuid: 591b533c-e897-4ab8-b4ec-4a5b99091fd3
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_location
+field_name: field_location
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: Amman
+      label: 'Amman Campus'
+    -
+      value: Zarqa
+      label: 'Zarqa Campus'
+    -
+      value: Aqaba
+      label: 'Aqaba Campus'
+    -
+      value: Maan
+      label: 'Maan Campus'
+    -
+      value: Ajlun
+      label: 'Ajlun Campus'
+    -
+      value: Irbed
+      label: 'Irbed Campus'
+    -
+      value: Jerash
+      label: 'Jerash Campus'
+    -
+      value: Tafilah
+      label: 'Tafilah Campus'
+    -
+      value: Madaba
+      label: 'Madaba Campus'
+    -
+      value: Ramtha
+      label: 'Ramtha Campus'
+    -
+      value: Karak
+      label: 'Karak Campus'
+    -
+      value: Salt
+      label: 'Salt Campus'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
